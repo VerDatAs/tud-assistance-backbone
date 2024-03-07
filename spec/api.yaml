@@ -1,0 +1,2128 @@
+#  Assistance Backbone for the assistance system developed as part of the VerDatAs project
+#  Copyright (C) 2022-2024 TU Dresden (Niklas Harbig, Sebastian Kucharski)
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+openapi: 3.0.3
+info:
+  title: TUD Assistance Backbone API
+  description: Component for analyzing learning process data in the form of xAPI statements and providing feedback to
+    learners' interactions and assistance and suggestions with regard to the user's learning state and the corresponding
+    learning content.
+  license:
+    name: GNU General Public License
+    url: https://www.gnu.org/licenses/old-licenses/gpl-3.0.de.html
+  version: 1.0.0
+tags:
+- name: Administration
+  description: Manage administrative settings of the system.
+- name: Development
+  description: Provide functionalities required for development.
+- name: Expert Module
+  description: Manage domain specific data.
+- name: Provisioning
+  description: Retrieve configuration information about the system.
+- name: Student Module
+  description: Manage learner specific data.
+- name: Tutorial Module
+  description: Manage assistance provided to users.
+security:
+- bearerAuth: []
+paths:
+  /api/v1/administration/setting/{key}:
+    get:
+      tags:
+      - Administration
+      summary: Get setting
+      description: Get the setting with the specified key.
+      operationId: getSetting
+      parameters:
+      - $ref: '#/components/parameters/settingKey'
+      responses:
+        200:
+          description: Successfully retrieved setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setting'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: A setting with the specified key does not exist
+    put:
+      tags:
+      - Administration
+      summary: Update setting
+      description: Update the setting with the specified key.
+      operationId: updateSetting
+      parameters:
+      - $ref: '#/components/parameters/settingKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Setting'
+      responses:
+        204:
+          description: Successfully updated setting
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/assistance-type:
+    get:
+      tags:
+      - Provisioning
+      summary: Get supported assistance types
+      description: Get the assistance types that are supported by the system.
+      operationId: getSupportedAssistanceTypes
+      parameters:
+      - $ref: '#/components/parameters/kindOfAssistanceType'
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      responses:
+        200:
+          description: Successfully retrieved supported assistance types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceTypeList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+  /api/v1/assistance-type/{key}:
+    get:
+      tags:
+      - Provisioning
+      summary: Get assistance type
+      description: Get the assistance type with the specified key.
+      operationId: getAssistanceType
+      parameters:
+      - $ref: '#/components/parameters/assistanceTypeKey'
+      responses:
+        200:
+          description: Successfully retrieved assistance type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceType'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: An assistance type with the specified key does not exist
+  /api/v1/assistance-language:
+    get:
+      tags:
+      - Provisioning
+      summary: Get supported assistance languages
+      description: Get the assistance languages that are supported by the system.
+      operationId: getSupportedAssistanceLanguages
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      responses:
+        200:
+          description: Successfully retrieved supported assistance languages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceLanguageList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+  /api/v1/lco:
+    get:
+      tags:
+      - Expert Module
+      summary: Get Learning Content Objects
+      description: Get all Learning Content Objects.
+      operationId: getLearningContentObjects
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      responses:
+        200:
+          description: Successfully retrieved Learning Content Objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+    post:
+      tags:
+      - Expert Module
+      summary: Create Learning Content Object
+      description: Create a Learning Content Object.
+      operationId: createLearningContentObject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreliminaryLearningContentObject'
+      responses:
+        201:
+          description: Successfully created Learning Content Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObject'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        409:
+          description: LCO with object ID already exists
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/lco/search:
+    post:
+      tags:
+      - Expert Module
+      summary: Search for Learning Content Objects
+      description: Search for Learning Content Objects by attributes.
+      operationId: searchForLearningContentObjects
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LearningContentObjectAttributeSearchParameter'
+      responses:
+        200:
+          description: Successfully retrieved Learning Content Objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/lco/{lcoId}:
+    get:
+      tags:
+      - Expert Module
+      summary: Get Learning Content Object
+      description: Get a Learning Content Object with the specified ID.
+      operationId: getLearningContentObject
+      parameters:
+      - $ref: '#/components/parameters/lcoId'
+      responses:
+        200:
+          description: Successfully retrieved Learning Content Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObject'
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object with the specified ID does not exist
+    put:
+      tags:
+      - Expert Module
+      summary: Update Learning Content Object
+      description: Update a Learning Content Object with the specified ID.
+      operationId: updateLearningContentObject
+      parameters:
+      - $ref: '#/components/parameters/lcoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreliminaryLearningContentObject'
+      responses:
+        200:
+          description: Successfully updated Learning Content Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObject'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object with the specified ID does not exist
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+    patch:
+      tags:
+      - Expert Module
+      summary: Patch Learning Content Object
+      description: Update certain parts of a Learning Content Object with the specified ID. The existing list of Learning Content Object attributes updated by applying the provided patches. If the list of attributes should be overwritten, the update operation has to be used. The patches are applied in the provided order.
+      operationId: patchLearningContentObject
+      parameters:
+      - $ref: '#/components/parameters/lcoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LearningContentObjectPatch'
+      responses:
+        200:
+          description: Successfully patched Learning Content Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObject'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object with the specified ID does not exist
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Expert Module
+      summary: Delete Learning Content Object
+      description: Delete a Learning Content Object with the specified ID.
+      operationId: deleteLearningContentObject
+      parameters:
+      - $ref: '#/components/parameters/lcoId'
+      responses:
+        204:
+          description: Successfully deleted Learning Content Object
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object with the specified ID does not exist
+  /api/v1/lco-model:
+    get:
+      tags:
+      - Expert Module
+      summary: Get Learning Content Object Models
+      description: Get all Learning Content Object Models.
+      operationId: getLearningContentObjectModels
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      responses:
+        200:
+          description: Successfully retrieved Learning Content Object Models
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectModelList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+    post:
+      tags:
+      - Expert Module
+      summary: Create Learning Content Object Model
+      description: Create a metamodel that describes a Learning Content Object type.
+      operationId: createLearningContentObjectModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LearningContentObjectModel'
+      responses:
+        201:
+          description: Successfully created Learning Content Object Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectModel'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        409:
+          description: A Learning Content Object Model of the specified type does already exist
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/lco-model/{lcoType}:
+    get:
+      tags:
+      - Expert Module
+      summary: Get Learning Content Object Model
+      description: Get a metamodel that describes a Learning Content Object type.
+      operationId: getLearningContentObjectModel
+      parameters:
+      - $ref: '#/components/parameters/lcoType'
+      responses:
+        200:
+          description: Successfully retrieved Learning Content Object Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectModel'
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object Model for the specified type does not exist
+    put:
+      tags:
+      - Expert Module
+      summary: Update Learning Content Object Model
+      description: Update a metamodel that describes a Learning Content Object type.
+      operationId: updateLearningContentObjectModel
+      parameters:
+      - $ref: '#/components/parameters/lcoType'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LearningContentObjectModel'
+      responses:
+        200:
+          description: Successfully updated Learning Content Object Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectModel'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object Model for the specified type does not exist
+        409:
+          description: Learning Content Objects of the type defined by the metamodel do exist
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Expert Module
+      summary: Delete Learning Content Object Model
+      description: Delete a metamodel that describes a Learning Content Object type.
+      operationId: deleteLearningContentObjectModel
+      parameters:
+      - $ref: '#/components/parameters/lcoType'
+      responses:
+        200:
+          description: Successfully deleted Learning Content Object Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningContentObjectModel'
+        401:
+          description: Authentication failed
+        404:
+          description: A Learning Content Object Model for the specified type does not exist
+        409:
+          description: Learning Content Objects of the type defined by the metamodel do exist
+  /api/v1/student:
+    get:
+      tags:
+      - Student Module
+      summary: Get Student Models
+      description: Get all Student Models.
+      operationId: getStudentModels
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      responses:
+        200:
+          description: Successfully retrieved Student Models
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentModelList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+  /api/v1/student/{userId}:
+    get:
+      tags:
+      - Student Module
+      summary: Get student model
+      description: Get the student model for a certain user with the specified ID.
+      operationId: getStudentModel
+      parameters:
+      - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          description: Successfully retrieved student model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentModel'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: User not found
+    delete:
+      tags:
+      - Student Module
+      summary: Reset student model
+      description: Reset the student model for a certain user with the specified ID.
+      operationId: resetStudentModel
+      parameters:
+      - $ref: '#/components/parameters/userId'
+      responses:
+        204:
+          description: Successfully reset student model
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: User not found
+  /api/v1/student/progress:
+    post:
+      tags:
+      - Student Module
+      summary: Search for student progress
+      description: Search the progress for a specific user with the specified ID for a specific LCO.
+      operationId: searchForStudentProgress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentProgressRequest'
+      responses:
+        200:
+          description: Successfully retrieved student progress
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentLearningContentObjectProgress'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: User not found
+  /api/v1/student/{userId}/assistance-level:
+    get:
+      tags:
+      - Student Module
+      summary: Get assistance level
+      description: Get the assistance level for a certain user with the specified ID.
+      operationId: getAssistanceLevel
+      parameters:
+      - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          description: Successfully retrieved assistance level
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A measure that defines how much assistance the user with the specified ID wants to receive.
+                required:
+                - level
+                properties:
+                  level:
+                    $ref: '#/components/schemas/AssistanceLevel'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: User not found
+    put:
+      tags:
+      - Student Module
+      summary: Set assistance level
+      description: Set the assistance level for a certain user.
+      operationId: setAssistanceLevel
+      parameters:
+      - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A measure that defines how much assistance the user wants to receive.
+              required:
+              - level
+              properties:
+                level:
+                  $ref: '#/components/schemas/AssistanceLevel'
+      responses:
+        200:
+          description: Successfully set assistance level
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: User not found
+        422:
+          description: Unprocessable entity
+    x-codegen-request-body-name: body
+  /api/v1/statement:
+    post:
+      tags:
+      - Tutorial Module
+      summary: Process xAPI statement
+      description: Process an xAPI statement, taking the previously received statements into account. When appropriate, assistance corresponding the learning process is initiated.
+      operationId: processXapiStatement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatementProcessingRequest'
+      responses:
+        200:
+          description: Successfully processed statement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceBundle'
+        204:
+          description: Successfully processed statement, assistance is provided asynchronously
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        404:
+          description: Corresponding student or referenced learning content elements not found
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/simulation:
+    post:
+      tags:
+      - Tutorial Module
+      summary: Simulate xAPI statement execution
+      description: Simulate the execution of a number xAPI statements.
+      operationId: simulateXapiStatementExecution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatementSimulationRequest'
+      responses:
+        200:
+          description: Successfully initiated statement simulation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationId'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        422:
+          description: Unprocessable entity
+    x-codegen-request-body-name: body
+  /api/v1/statement/query:
+    post:
+      tags:
+      - Tutorial Module
+      summary: Query xAPI statements
+      description: Query xAPI statements based on filter and aggregation operations.
+      operationId: queryXapiStatements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryStatementsRequest'
+      responses:
+        200:
+          description: Successfully queried and aggregated statements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryStatementsResult'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+      x-codegen-request-body-name: body
+  /api/v1/statement/schema:
+    get:
+      tags:
+      - Tutorial Module
+      summary: Get xAPI statements attributes
+      description: Get the attributes of the xAPI.
+      operationId: getXapiStatementsAttributes
+      responses:
+        200:
+          description: Successfully retrieved xAPI statement schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatementSchema'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+  /api/v1/statement/{attribute}/suggestions:
+    get:
+      tags:
+      - Tutorial Module
+      summary: Get suggestions for xAPI statement attributes
+      description: Get suggestions for xAPI statement attributes.
+      operationId: getXapiStatementSuggestions
+      parameters:
+      - $ref: '#/components/parameters/attribute'
+      - $ref: '#/components/parameters/suggest'
+      responses:
+        200:
+          description: Successfully retrieved suggestions for xAPI statement attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatementSuggestions'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+  /api/v1/assistance:
+    post:
+      tags:
+      - Tutorial Module
+      summary: Initiate assistance process
+      description: Initiate an assistance process that has to be triggered proactively.
+      operationId: initiateAssistanceProcess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssistanceInitiationRequest'
+      responses:
+        200:
+          description: Successfully initiated assistance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceBundle'
+        204:
+          description: Successfully initiated assistance, assistance is provided asynchronously
+        400:
+          description: Bad Request
+        401:
+          description: Authentication failed
+        404:
+          description: Assistance type not found
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+    get:
+      tags:
+      - Tutorial Module
+      summary: Get assistance processes
+      description: Get all assistance processes.
+      operationId: getAssistanceProcesses
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      responses:
+        200:
+          description: Successfully retrieved assistance processes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceRecordList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+  /api/v1/assistance/search:
+    post:
+      tags:
+      - Tutorial Module
+      summary: Search for assistance processes
+      description: Search for assistance processes by parameters.
+      operationId: searchForAssistanceProcesses
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AssistanceParameterSearchParameter'
+      responses:
+        200:
+          description: Successfully retrieved assistance processes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceRecordList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/assistance/{aId}:
+    get:
+      tags:
+      - Tutorial Module
+      summary: Get assistance process
+      description: Get the assistance processes with the specified ID.
+      operationId: getAssistanceProcess
+      parameters:
+      - $ref: '#/components/parameters/aId'
+      responses:
+        200:
+          description: Successfully retrieved assistance process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceRecord'
+        401:
+          description: Authentication failed
+        404:
+          description: An assistance process with the provided ID does not exist
+    post:
+      tags:
+      - Tutorial Module
+      summary: Update assistance process
+      description: Post an Assistance Object which data are used to update the state of the corresponding assistance process.
+      operationId: updateAssistanceProcess
+      parameters:
+      - $ref: '#/components/parameters/aId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AssistanceResponseObject'
+      responses:
+        200:
+          description: Successfully updated assistance process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceBundle'
+        204:
+          description: Successfully updated assistance process, assistance is provided asynchronously
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/assistance/{aId}/type:
+    get:
+      tags:
+      - Tutorial Module
+      summary: Get assistance process type key
+      description: Get the type key of the assistance processes with the specified ID.
+      operationId: getAssistanceProcessTypeKey
+      parameters:
+      - $ref: '#/components/parameters/aId'
+      responses:
+        200:
+          description: Successfully retrieved assistance process type key
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Schema for encapsulating the type key of an assistance process.
+                required:
+                - typeKey
+                properties:
+                  typeKey:
+                    type: string
+                    description: The key of the assistance type.
+                    example: learning_process_feedback
+        401:
+          description: Authentication failed
+        404:
+          description: An assistance process with the provided ID does not exist
+  /api/v1/assistance-object/search:
+    post:
+      tags:
+      - Tutorial Module
+      summary: Search for assistance objects
+      description: Search for assistance objects by parameters.
+      operationId: searchForAssistanceObjects
+      parameters:
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/numberOfObjectsPerPage'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AssistanceParameterSearchParameter'
+      responses:
+        200:
+          description: Successfully retrieved assistance objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistanceObjectRecordList'
+        400:
+          description: Bad request
+        401:
+          description: Authentication failed
+        422:
+          description: Unprocessable entity
+      x-codegen-request-body-name: body
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Development
+      summary: Generate a JWT
+      description: Generate a JWT with the provided username and the Role ADMIN for development purposes.
+      operationId: generateJwt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JwtRequest'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+      security: []
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    JwtRequest:
+      type: object
+      description: Schema for representing credentials required for JWT creation.
+      required:
+        - actorAccountName
+      properties:
+        actorAccountName:
+          type: string
+          title: Actor Account Name
+          description: The account name of the user.
+        password:
+          type: string
+          title: Password
+          description: The password of the user.
+    JwtResponse:
+      type: object
+      description: Schema for representing a container object for a JWT.
+      required:
+        - token
+      properties:
+        token:
+          title: Token
+          type: string
+          description: The actual JWT.
+    Setting:
+      type: object
+      description: Schema for representing a setting of the system.
+      required:
+      - key
+      properties:
+        key:
+          type: string
+          description: The unique key of the setting.
+          example: assistance_stopped
+        value:
+          description: The value of the setting.
+          example: true
+    AssistanceLanguageList:
+      type: object
+      description: Schema for representing a container object that encapsulates assistance languages.
+      required:
+      - languages
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        languages:
+          type: array
+          description: The encapsulated assistance languages.
+          items:
+            type: string
+            description: Language nomenclature according to ISO-639-1.
+            example: de
+        totalNumber:
+          type: integer
+          description: The total number of assistance languages encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of assistance languages.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    AssistanceLevel:
+      type: integer
+      description: Schema for representing the level that defines how much assistance is provided to a user that is represented by a value between 0 and 10. The default is the maximal level.
+      minimum: 0
+      maximum: 10
+    LearningPathElement:
+      type: object
+      description: Schema for representing an element of a learning path.
+      required:
+      - learningPathElementTarget
+      - step
+      properties:
+        learningPathElementId:
+          type: string
+          description: The ID of the learning path element that is unique per learning path.
+        learningPathElementTarget:
+          type: string
+          description: The ID of the element that is represented by the learning path element e.g., a content page.
+        step:
+          type: integer
+          minimum: 1
+          description: The step number of the element within the corresponding learning path.
+        preferred:
+          type: boolean
+          description: Whether the learning path element is preferred or not.
+        learningPathElementProcessedRequirements:
+          type: array
+          description: A number of learning path elements that have to be processed when this element is processed.
+          items:
+            $ref: '#/components/schemas/LearningPathElement'
+        learningPathElementNotProcessedRequirements:
+          type: array
+          description: A number of learning path elements that must not have been processed when this element is processed.
+          items:
+            $ref: '#/components/schemas/LearningPathElement'
+    LearningPath:
+      type: object
+      description: Schema for representing a user's learning path.
+      required:
+      - title
+      - numberOfCurrentAberrations
+      properties:
+        title:
+          type: string
+          description: The title of the learning path.
+        level:
+          type: string
+          description: The difficulty level of the learning path.
+          # TODO: Add example
+        numberOfCurrentAberrations:
+          type: integer
+          description: The current number of aberrations from this learning path.
+          example: 1
+        processedLearningPathElements:
+          type: array
+          description: The already processed learning path elements.
+          items:
+            $ref: '#/components/schemas/LearningPathElement'
+        currentLearningPathElement:
+          type: object
+          description: The learning path element the user is currently working with.
+          allOf:
+          - $ref: '#/components/schemas/LearningPathElement'
+        successiveLearningPathElements:
+          type: array
+          description: The learning path elements yet to process.
+          items:
+            $ref: '#/components/schemas/LearningPathElement'
+    StudentModel:
+      type: object
+      description: Schema for representing a model that encapsulates the knowledge about a certain student.
+      required:
+      - userId
+      properties:
+        userId:
+          type: string
+          description: The unique ID of a user which is also used by the xAPI statements to identify this user.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        assistanceLevel:
+          $ref: '#/components/schemas/AssistanceLevel'
+        cooperativeness:
+          type: boolean
+          description: Whether the user is willing to help others on already solved tasks. The default is false.
+        online:
+          type: boolean
+          description: Whether the user is logged in or not. The default is false.
+        experiences:
+          type: array
+          description: An ordered list of experiences collected for the learner.
+          items:
+            $ref: '#/components/schemas/Experience'
+        learningPathInProgress:
+          $ref: '#/components/schemas/LearningPath'
+    StudentProgressRequest:
+      type: object
+      description: Schema for representing a request for the progress of a specific LCO of a specific user.
+      required:
+      - userId
+      properties:
+        userId:
+          type: string
+          description: Unique ID of a user.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        subLcos:
+          type: boolean
+          description: Whether the sub LCOs of a LCO should be included in a progress report. The default is false.
+          default: false
+        lcoId:
+          type: string
+          description: The unique ID of the LCO for which the progress is requested. This is required if no `objectId` is specified.
+          example: 633A587A-B944-4974-850F-DDDE69CECFF1
+        objectId:
+          type: string
+          description: The ID which is used to identify the LCO in an xAPI-statement for which the progress is requested. This is required if no `lcoId` is specified.
+          example: http://localhost:8081/goto.php?target=pg__86&client_id=default&h5p_object_id=1&obj_id_lrs=320
+    Experience:
+      type: object
+      description: Schema for representing an experience collected for a learner.
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the experience.
+          example: 2023-06-27T10:12:53.000000+02:00
+        statementId:
+          type: string
+          description: The ID of the statement to which the experience relates.
+          example: f345c582-cc10-4bab-8554-796ed7261bb9
+        objectId:
+          type: string
+          description: The ID of the object which is referenced in the related statement.
+          example: http://localhost:8081/goto.php?target=pg__86&client_id=default&h5p_object_id=1&obj_id_lrs=320
+        lcoId:
+          type: string
+          description: The unique ID of this LCO.
+          example: 633A587A-B944-4974-850F-DDDE69CECFF1
+        verbId:
+          type: string
+          description: The ID of the verb which is referenced in the related statement.
+          example: http://adlnet.gov/expapi/verbs/answered
+        result:
+          type: object
+          description: The result of the experience, if any, as reported in the statement.
+          example: {"score": {"min": 0, "max": 1, "raw": 1, "scaled": 1}, "success": true, "completion": true, "duration": "PT55.41S"}
+    StudentLearningContentObjectProgress:
+      type: object
+      description: Progress of an LCO of a student.
+      properties:
+        userId:
+          type: string
+          description: The ID of the user the assistance belongs to.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        progress:
+          type: array
+          items:
+            $ref: '#/components/schemas/Experience'
+        sub_lco_progress:
+          type: array
+          items:
+            type: object
+            required:
+            - key
+            properties:
+              key:
+                type: string
+                description: The identified of the LCO that was experienced.
+                example: http://localhost:5173/goto.php?target=lm_90&client_id=default&obj_id_lrs=339
+              value:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Experience'
+    StudentModelParameter:
+      type: object
+      description: Schema for representing a parameter of a student model.
+      required:
+      - key
+      properties:
+        key:
+          type: string
+          description: The identifier of the student model parameter.
+          example: experiences
+        value:
+          description: The value of the student model parameter.
+    StudentModelList:
+      type: object
+      description: Schema for representing a container object that encapsulates Student Models.
+      required:
+      - students
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        students:
+          type: array
+          description: The encapsulated Student Models.
+          items:
+            $ref: '#/components/schemas/StudentModel'
+        totalNumber:
+          type: integer
+          description: The total number of Student Models encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of Student Models.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    LearningContentObjectPatch:
+      type: object
+      description: Schema for representing a patch for an attribute of a generic Learning Content Object (LCO).
+      required:
+      - operation
+      - key
+      properties:
+        operation:
+          type: string
+          description: The operation to apply to the Learning Content Object.
+          enum:
+          - ADD
+          - DELETE
+          - UPDATE
+        key:
+          type: string
+          description: The key of the attribute that has to be modified.
+          example: target_url
+        value:
+          description: The value of the LCO attribute to set. This is required if the operation is `ADD` or `UPDATE`.
+          oneOf:
+          - type: string
+          - type: number
+          - type: integer
+          - type: boolean
+          - $ref: '#/components/schemas/LearningContentObject'
+          - type: array
+            items:
+              oneOf:
+              - type: string
+              - type: number
+              - type: integer
+              - type: boolean
+              - $ref: '#/components/schemas/LearningContentObject'
+    PreliminaryLearningContentObject:
+      type: object
+      description: Schema for representing a generic Learning Content Object (LCO) to be created.
+      required:
+      - lcoType
+      properties:
+        lcoType:
+          type: string
+          description: The unique identifier of the type of the LCO.
+          example: MODULE
+        objectId:
+          type: string
+          description: The ID which is used to identify the LCO in an xAPI-statement.
+          example: http://localhost:8081/goto.php?target=pg__86&client_id=default&h5p_object_id=1&obj_id_lrs=320
+        attributes:
+          type: array
+          description: A list of attributes of the LCO.
+          items:
+            $ref: '#/components/schemas/LearningContentObjectAttribute'
+    LearningContentObject:
+      type: object
+      description: Schema for representing a generic Learning Content Object (LCO).
+      allOf:
+      - $ref: '#/components/schemas/PreliminaryLearningContentObject'
+      required:
+      - lcoType
+      - lcoId
+      properties:
+        lcoId:
+          type: string
+          description: The unique ID of this LCO.
+          example: 633A587A-B944-4974-850F-DDDE69CECFF1
+    LearningContentObjectList:
+      type: object
+      description: Schema for representing a container object that encapsulates Learning Content Objects.
+      required:
+      - lcos
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        lcos:
+          type: array
+          description: The encapsulated Learning Content Objects.
+          items:
+            $ref: '#/components/schemas/LearningContentObject'
+        totalNumber:
+          type: integer
+          description: The total number of Learning Content Objects encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of Learning Content Objects.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    LearningContentObjectModel:
+      type: object
+      description: Schema for representing a metamodel that describes a type of Learning Content Object.
+      required:
+      - lcoType
+      properties:
+        lcoType:
+          type: string
+          description: The unique identifier of the type of the LCO.
+          example: MODULE
+        attributes:
+          type: array
+          description: A list of attribute definitions of the LCO.
+          items:
+            $ref: '#/components/schemas/LearningContentObjectAttributeModel'
+    LearningContentObjectModelList:
+      type: object
+      description: Schema for representing a container object that encapsulates Learning Content Object Models.
+      required:
+      - lcoModels
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        lcoModels:
+          type: array
+          description: The encapsulated Learning Content Object Models.
+          items:
+            $ref: '#/components/schemas/LearningContentObjectModel'
+        totalNumber:
+          type: integer
+          description: The total number of Learning Content Object Models encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of Learning Content Object Models.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    LearningContentObjectAttributeSearchParameter:
+      type: object
+      description: |
+        Schema for representing a Learning Content Object attribute focused search query. The key specifies the
+        parameter to search for and the value specifies the desired value. In addition, when searching for an Learning
+        Content Object, the following attributes can be specified:
+        * `lcoId` to search for an LCO by its unique ID
+        * `lcoType` to search for an LCO by its type
+        * `objectId` to search for an LCO by the ID used to reference it in an xAPI statement
+      required:
+      - key
+      properties:
+        key:
+          type: string
+          description: The key that identifies the LCO attribute by which value the LCO is to be searched.
+          example: target_url
+        value:
+          type: object
+          description: The value of the LCO attribute to search for.
+    LearningContentObjectAttributeBase:
+      type: object
+      description: Schema for representing the base properties of an attribute of a Learning Content Object.
+      required:
+      - key
+      properties:
+        key:
+          type: string
+          description: The key that identifies the LCO attribute. It has to be unique per Learning Content Object Model. Neither `lcoId` nor `lcoType` can be used since those are reserved terms.
+          example: target_url
+    LearningContentObjectAttribute:
+      type: object
+      description: Schema for representing an attribute of a Learning Content Object.
+      allOf:
+      - $ref: '#/components/schemas/LearningContentObjectAttributeBase'
+      required:
+      - key
+      - value
+      properties:
+        value:
+          description: The value of the LCO attribute. This can either be a string, a number, an integer, a boolean, an other LCO or a list of other LCOs.
+    LearningContentObjectAttributeModel:
+      type: object
+      description: Schema for representing the metamodel of an attribute of a Learning Content Object.
+      required:
+      - key
+      - type
+      allOf:
+      - $ref: '#/components/schemas/LearningContentObjectAttributeBase'
+      properties:
+        type:
+          $ref: '#/components/schemas/LearningContentObjectAttributeTypeModel'
+        required:
+          type: boolean
+          description: Describes whether the attribute is required or not. The default value is false.
+        allowedValues:
+          type: array
+          description: The values that are allowed to be set for the attribute. These can either be strings, numbers, integers, booleans, other LCOs or lists of other LCOs.
+          items:
+            type: object
+    LearningContentObjectAttributeTypeModel:
+      type: object
+      description: Schema for representing the type of an LCO attribute that determines how it should be parsed.
+      required:
+      - kind
+      - type
+      properties:
+        kind:
+          type: string
+          description: The kind of the attribute that determines whether it is a native data field or a complex one (i.e., either another object or an array).
+          enum:
+          - simple
+          - complex
+        type:
+          type: string
+          description: The concrete data type of the attribute. If kind is `simple` only `string`, `number`, `integer` or `boolean` can be applied. If kind is `complex` only `object` and `array` can be applied.
+          enum:
+          - string
+          - number
+          - integer
+          - boolean
+          - object
+          - array
+        subType:
+          type: string
+          description: Determines the type of the encapsulated data when the attribute is of kind `complex`. Only `string`, `number`, `integer`, `boolean` or any other defined LCO type can be applied.
+    AssistanceType:
+      #     TODO: It has to be defined how the assistance that are returned might look like
+      type: object
+      description: Schema for representing a certain type of assistance.
+      required:
+      - key
+      - kind
+      properties:
+        key:
+          type: string
+          description: An identifier that uniquely identifies the type of assistance.
+          example: learning_process_feedback
+        description:
+          type: string
+          description: A textual description of the assistance type and the communicated information.
+          example: Provide assistance corresponding the learning process.
+        kind:
+          type: string
+          description: "The kind of the assistance type which depends on how data is provided to trigger the assistance\nprovision and which information is provided during the assistance process. The following kinds do exist\n  * `Cooperative Assistance` - which is assistance corresponding cooperative processes\n  * `Informational Feedback` - which is assistance that encompasses hints corresponding the user or the \nlearning environment\n  * `Proactive Suggestion` - which is assistance that encompasses the delivery of suggestions corresponding \nthe learning process initiated by the user\n  * `Reactive Suggestion`  - which is assistance that encompasses the delivery of suggestions corresponding \nthe learning process initiated by the system\n"
+          enum:
+          - cooperative_assistance
+          - informational_feedback
+          - proactive_assistance
+          - reactive_assistance
+        parameters:
+          type: array
+          description: A list of parameters that should be provided during a proactive assistance initiation request.
+          items:
+            $ref: '#/components/schemas/AssistanceInitiationRequestParameterDefinition'
+        preconditions:
+          type: array
+          description: A list of conditions that have to be fulfilled for the assistance to be initiable.
+          items:
+            $ref: '#/components/schemas/AssistanceInitiationRequestParameterCondition'
+        phases:
+          type: array
+          description: A list of the phases during which assistance is provided.
+          items:
+            $ref: '#/components/schemas/AssistancePhase'
+    AssistancePhase:
+      type: object
+      description: A phase during which assistance is provided.
+      required:
+      - steps
+      properties:
+        phaseNumber:
+          type: number
+          description: The number of the phase.
+          minimum: 1
+        duration:
+          type: number
+          description: The duration of the phase in seconds.
+        parameters:
+          type: array
+          description: A list of parameters of the assistance phase.
+          items:
+            $ref: '#/components/schemas/AssistanceParameter'
+        steps:
+          type: array
+          description: A list of the steps of a phase during which assistance is provided.
+          items:
+            $ref: '#/components/schemas/AssistancePhaseStep'
+    AssistancePhaseStep:
+      type: object
+      description: A step of a phase during which assistance is provided.
+      required:
+      - operationKey
+      properties:
+        operationKey:
+          type: string
+          description: An identifier of the step of the assistance phase which is unique per assistance.
+          example: initiation
+        duration:
+          type: number
+          description: The duration of the step in seconds.
+        parameters:
+          type: array
+          description: A list of parameters of the assistance phase step.
+          items:
+            $ref: '#/components/schemas/AssistanceParameter'
+    AssistanceTypeList:
+      type: object
+      description: Schema for representing a container object that encapsulates Assistance Types.
+      required:
+      - types
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        types:
+          type: array
+          description: The encapsulated Assistance Types.
+          items:
+            $ref: '#/components/schemas/AssistanceType'
+        totalNumber:
+          type: integer
+          description: The total number of Assistance Types encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of Assistance Types.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    Assistance:
+      type: object
+      description: Schema for representing an assistance process.
+      required:
+      - aId
+      - userId
+      - typeKey
+      - timestamp
+      - assistanceState
+      - assistanceObjects
+      properties:
+        aId:
+          type: string
+          description: The ID that uniquely identifies the assistance process.
+          example: 3716BA13-DDCD-436F-8BBD-EDAEE0B3C65C
+        userId:
+          type: string
+          description: The ID of the user the assistance belongs to.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        typeKey:
+          type: string
+          description: The key of the assistance type.
+          example: learning_process_feedback
+        timestamp:
+          type: string
+          description: The timestamp when the assistance was initiated.
+          example: 2023-06-27T10:12:53.000000+02:00
+        assistanceState:
+          $ref: '#/components/schemas/AssistanceState'
+        parameters:
+          type: array
+          description: A list of parameters of the assistance process.
+          items:
+            $ref: '#/components/schemas/AssistanceParameter'
+        assistanceObjects:
+          type: array
+          description: A list of Assistance Object related to the assistance process.
+          items:
+            $ref: '#/components/schemas/AssistanceObject'
+    AssistanceState:
+      type: object
+      description: The state of an assistance process.
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          description: The status of an assistance process.
+          enum:
+          - initiated
+          - in_progress
+          - aborted
+          - completed
+        phase:
+          type: number
+          description: The number of the current assistance phase.
+          minimum: 1
+        step:
+          type: string
+          description: The operation key of the current assistance phase step.
+    AssistanceRecord:
+      type: object
+      description: Schema for representing a record of an active or an completed assistance process.
+      allOf:
+      - $ref: '#/components/schemas/Assistance'
+      properties:
+        assistanceObjects:
+          type: array
+          description: A list of Assistance Object records related to the assistance process.
+          items:
+            $ref: '#/components/schemas/AssistanceObjectRecord'
+    AssistanceRecordList:
+      type: object
+      description: Schema for representing a container object that encapsulates records of assistance processes.
+      required:
+      - assistanceRecords
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        assistanceRecords:
+          type: array
+          description: The encapsulated assistance process records.
+          items:
+            $ref: '#/components/schemas/AssistanceRecord'
+        totalNumber:
+          type: integer
+          description: The total number of assistance process records encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of assistance process records.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    AssistanceBundle:
+      type: object
+      description: Schema for representing a bundle of provided assistance that might have different types.
+      required:
+      - assistance
+      properties:
+        assistance:
+          type: array
+          description: A list of provided assistance.
+          items:
+            $ref: '#/components/schemas/Assistance'
+    AssistanceObject:
+      type: object
+      description: Schema for representing a container object that holds data that is provided to a specific user during an assistance process to be processed.
+      required:
+      - aoId
+      - userId
+      - timestamp
+      - parameters
+      properties:
+        aoId:
+          type: string
+          description: The unique ID of an Assistance Object.
+          example: BC2340BA-1623-41F8-9C0D-B4373956E6EC
+        userId:
+          type: string
+          description: The ID of the user the assistance is provided to.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        assistanceType:
+          type: string
+          description: The key of the corresponding assistance type.
+          example: learning_process_feedback
+        timestamp:
+          type: string
+          description: The timestamp when the assistance was initiated.
+          example: 2023-06-27T10:12:53.000000+02:00
+        parameters:
+          type: array
+          description: A list of parameters of the AO.
+          items:
+            $ref: '#/components/schemas/AssistanceParameter'
+    AssistanceResponseObject:
+      type: object
+      description: Schema for representing a container object that can be used to update user-related information within an assistance process or to respond to assistance provided through an Assistance Object. In order to be able to identify the user for who information have to be updated the `userId` has to be specified or to determine the Assistance Object to which should be responded the `aoId` has to be specified.
+      properties:
+        aoId:
+          type: string
+          description: The unique ID of an Assistance Object.
+          example: BC2340BA-1623-41F8-9C0D-B4373956E6EC
+        userId:
+          type: string
+          description: The ID of the user the assistance is provided to.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        parameters:
+          type: array
+          description: A list of parameters of the AO.
+          items:
+            $ref: '#/components/schemas/AssistanceParameter'
+    AssistanceObjectRecord:
+      type: object
+      description: Schema for representing a container object that holds assistance data that were processed during an assistance process. It either can represent an `AssistanceObject` or an `AssistanceResponseObject`.
+      required:
+      - aId
+      - aoId
+      - userId
+      - type
+      - timestamp
+      - parameters
+      allOf:
+      - $ref: '#/components/schemas/AssistanceObject'
+      properties:
+        aId:
+          type: string
+          description: The ID that uniquely identifies the assistance process.
+          example: 3716BA13-DDCD-436F-8BBD-EDAEE0B3C65C
+        type:
+          type: string
+          description: The kind of object this record represents.
+          enum:
+          - assistance_object
+          - assistance_response_object
+    AssistanceObjectRecordList:
+      type: object
+      description: Schema for representing a container object that encapsulates records of assistance objects.
+      required:
+      - assistanceObjectRecords
+      - totalNumber
+      - providedNumber
+      - pageNumber
+      properties:
+        assistanceObjectRecords:
+          type: array
+          description: The encapsulated assistance object records.
+          items:
+            $ref: '#/components/schemas/AssistanceObjectRecord'
+        totalNumber:
+          type: integer
+          description: The total number of assistance object records encapsulated.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of assistance object records.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+    AssistanceParameterSearchParameter:
+      type: object
+      description: |
+        Schema for representing an assistance parameter focused search query. The key specifies the parameter to search
+        for and the value specifies the desired value. In addition, when searching for an assistance process, the
+        following attributes can be specified:
+        * `aId` to search for an assistance process by its unique ID
+        * `userId` to search for an assistance process initiated by a specific user
+        * `typeKey` to search for an assistance process of a specific type
+        * `timestamp` to search for an assistance process by the time it was initiated
+
+        When searching for an assistance object the following attributes can be specified:
+        * `aId` to search for an assistance object by the unique ID of the assistance process the object belongs to
+        * `aoId` to search for an assistance object by its unique ID
+        * `userId` to search for an assistance object by a specific user object was send to or received from
+        * `type` to search for an assistance object of a specific type
+        * `timestamp` to search for an assistance object by the time it was created
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The key that identifies the assistance process parameter or the Assistance Object parameter by which value the assistance process is to be searched.
+          example: group_id
+        value:
+          type: object
+          description: The value of the assistance process parameter or the Assistance Object parameter to search for.
+    AssistanceParameter:
+      type: object
+      description: Schema for representing a parameter of an assistance process or an Assistance Object.
+      required:
+      - key
+      properties:
+        key:
+          type: string
+          description: The identifier of the assistance parameter that has to be unique per assistance process or Assistance Object parameter set.
+          example: group_id
+        value:
+          description: The value of the assistance parameter.
+    AssistanceInitiationRequestParameterDefinition:
+      type: object
+      description: Schema for representing a parameter that should be provided with a proactive assistance initiation request.
+      required:
+      - key
+      - type
+      - required
+      properties:
+        key:
+          type: string
+          description: The key that identifies the parameter. This has to be unique per assistance initiation request.
+          example: topic_id
+        type:
+          type: string
+          description: The type of the parameter provided with an assistance initiation request.
+          enum:
+          - string
+          - number
+          - integer
+          - object
+        required:
+          type: boolean
+          description: Whether the parameter is required for the assistance initiation request or not.
+        allowedValues:
+          type: array
+          description: The values the parameter can be set to.
+          items:
+            oneOf:
+            - type: string
+            - type: number
+            - type: integer
+            - type: object
+    AssistanceInitiationRequestParameterCondition:
+      type: object
+      description: Schema for representing a list of conditions that have to be fulfilled for the assistance to be initiable.
+      required:
+      - key
+      - possibleValues
+      properties:
+        key:
+          type: string
+          description: The key that identifies the parameter whose value acts as a precondition.
+          example: topic_id
+        requiredValues:
+          type: array
+          description: The values the parameter is allowed to be set to fulfill the condition.
+          items:
+            oneOf:
+            - type: string
+            - type: number
+            - type: integer
+            - type: object
+    AssistanceInitiationRequestParameter:
+      type: object
+      description: Schema for representing a parameter that is provided with a proactive assistance initiation request. The parameter has to match the parameter definition of the assistance type which initiation was requested.
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+          description: The key that identifies the parameter. This has to be unique per assistance initiation request and has to match the parameter definition of the assistance type which initiation was requested.
+          example: topic_id
+        value:
+          type: object
+          description: The value of the parameter which type has to mach the parameter definition of the assistance type which initiation was requested.
+          example: 0815
+    AssistanceInitiationRequest:
+      type: object
+      description: Schema for representing a request for the initiation of assistance.
+      required:
+      - type
+      - parameters
+      properties:
+        type:
+          type: string
+          description: The key of the type of assistance to initiate.
+          example: topic_progress
+        language:
+          type: string
+          description: The language in which the assistance should be provided according to ISO-639-1.
+          example: de
+        parameters:
+          type: array
+          description: The parameters for the assistance initiation request.
+          items:
+            $ref: '#/components/schemas/AssistanceInitiationRequestParameter'
+    StatementProcessingRequest:
+      type: object
+      description: Schema for representing a xAPI statement processing request.
+      required:
+      - statement
+      - supportedAssistanceTypes
+      properties:
+        statement:
+          type: object
+          description: The xAPI statement to store and process.
+          example: {"actor": {"account": {"homePage": "https://iliasdev.com", "name": "0815@testuser.ilias"}}, "verb": {"id": "http://adlnet.gov/expapi/verbs/answered"}, "object": {"id": "http://test.de/CS7K2"}, "result": {"completion": false, "success": true, "duration": "P0DT0H2M26S"}}
+        supportedAssistanceTypes:
+          type: array
+          description: The assistance types the requesting party supports and which should thus be solely delivered.
+          items:
+            type: object
+            required:
+            - key
+            properties:
+              key:
+                type: string
+                description: An identifier that uniquely identifies the type of the assistance.
+                example: learning_process_feedback
+    StatementSimulationRequest:
+      type: object
+      description: Schema for representing a xAPI statement simulation request.
+      required:
+      - statements
+      - supportedAssistanceTypes
+      properties:
+        statements:
+          type: array
+          description: The xAPI statements to simulate.
+          items:
+            type: object
+            example: {"actor": {"account": {"homePage": "https://iliasdev.com", "name": "0815@testuser.ilias"}}, "verb": {"id": "http://adlnet.gov/expapi/verbs/answered"}, "object": {"id": "http://test.de/CS7K2"}, "result": {"completion": false, "success": true, "duration": "P0DT0H2M26S"}}
+        supportedAssistanceTypes:
+          type: array
+          description: The assistance types the requesting party supports and which should thus be solely delivered.
+          items:
+            type: object
+            required:
+            - key
+            properties:
+              key:
+                type: string
+                description: An identifier that uniquely identifies the type of the assistance.
+                example: learning_process_feedback
+        userId:
+          type: string
+          description: The ID that should be set as the user ID in all statements to simulate.
+          example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+        timeFactor:
+          type: number
+          description: A factor to scale the time intervals between simulated statements. 1 is normal, 2 is e.g. double speed and 0.5 is half speed.
+          example: 0.1
+    SimulationId:
+      type: object
+      description: Schema for encapsulating an ID that uniquely identifies a statement simulation process.
+      required:
+      - simulationId
+      properties:
+        simulationId:
+          type: string
+          description: A UUID that uniquely identifies the simulation process and that can be used to control (e.g., stop, abort) this process.
+          example: F7A464DA-5C38-4FE5-8F4D-781BE1C7090E
+    QueryStatementsRequest:
+      type: object
+      description: Schema for representing a xAPI statement query and aggregate request.
+      required:
+      - search
+      - operations
+      properties:
+        search:
+          type: object
+          description: The query for the xAPI statements.
+          example: {"search": {"ver.id": "http://adlnet.gov/expapi/verbs/answered"}}
+        operations:
+          type: array
+          description: The aggregate operations for the xAPI statements.<<
+          items:
+            type: object
+    QueryStatementsResult:
+      type: object
+      description: Test
+      properties:
+        totalNumber:
+          type: integer
+          description: The total number of statements in the collection.
+          minimum: 0
+        providedNumber:
+          type: integer
+          description: The provided number of statements for the query.
+          minimum: 0
+        pageNumber:
+          type: integer
+          description: The provided page.
+          minimum: 1
+        statements:
+          type: array
+          description: Test
+          items:
+            $ref: '#/components/schemas/Statement'
+        aggregate:
+          type: array
+          description: Test.
+          items:
+            type: object
+    Statement:
+      type: object
+      description: Schema for representing an statement.
+      properties:
+        _id:
+          type: string
+          description: The object id of the xAPI statement.
+          example: '65951915841fb3c4d5829f69'
+        timestamp:
+          type: string
+          description: The timestamp of the xAPI statement.
+          example: '2023-06-27T09:47:21.000000+02:00'
+        actor:
+          type: object
+          description: The actor of the xAPI statement.
+        verb:
+          type: object
+          description: The verb of the xAPI statement.
+        result:
+          type: object
+          description: The result of the xAPI statement.
+        object:
+          type: object
+          description: The object of the xAPI statement.
+        id:
+          type: string
+          description: The id of the xAPI statement.
+        stored:
+          type: string
+          description: The timestamp of when the xAPI statement was stored.
+        authority:
+          type: object
+          description: The authority of the xAPI statement.
+        version:
+          type: string
+          description: The version of the xAPI statement.
+    StatementSchema:
+      type: array
+      description: List containing the schema of the xAPI statements
+      items:
+        type: object
+    StatementSuggestions:
+      type: array
+      description: List containing suggestions for an xAPI statement
+      items:
+        type: string
+  parameters:
+    kindOfAssistanceType:
+      name: kind
+      in: query
+      description: The kind of assistance type that defines how data is provided to initiate the assistance and which information is provided during the assistance provision.
+      required: false
+      schema:
+        type: string
+        enum:
+        - cooperative_assistance
+        - informational_feedback
+        - proactive_assistance
+        - reactive_assistance
+    assistanceTypeKey:
+      name: key
+      in: path
+      description: Unique key of an assistance type.
+      required: true
+      schema:
+        type: string
+        example: learning_process_feedback
+    settingKey:
+      name: key
+      in: path
+      description: Unique key of a setting.
+      required: true
+      schema:
+        type: string
+        example: assistance_stopped
+    userId:
+      name: userId
+      in: path
+      description: Unique ID of a user.
+      required: true
+      schema:
+        type: string
+        example: bb85da8424ffa1eb1c0a328e12f68312c01511ffe0643599c04525902087266c@f269323f-fa99-4102-81fa-2e6ee79d13e8.ilias
+    lcoId:
+      name: lcoId
+      in: path
+      description: Unique ID of a Learning Content Object.
+      required: true
+      schema:
+        type: string
+        example: 633A587A-B944-4974-850F-DDDE69CECFF1
+    aId:
+      name: aId
+      in: path
+      description: Unique ID of an assistance process.
+      required: true
+      schema:
+        type: string
+        example: 2EA95788-7ABA-4DDD-B3BA-E7EB574685BD
+    aoId:
+      name: aoId
+      in: path
+      description: Unique ID of an Assistance Object.
+      required: true
+      schema:
+        type: string
+        example: BC2340BA-1623-41F8-9C0D-B4373956E6EC
+    lcoType:
+      name: lcoType
+      in: path
+      description: Unique identifier of an LCO-Model.
+      required: true
+      schema:
+        type: string
+      example: MODULE
+    numberOfObjectsPerPage:
+      name: objectsPerPage
+      in: query
+      description: The number of objects that should be delivered per page. If this is not specified, all objects are delivered. This has to be specified when a page number is specified.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    pageNumber:
+      name: page
+      in: query
+      description: The page that should be delivered. The default value is one.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    attribute:
+      name: attribute
+      in: path
+      description: Name of the xAPI statement attribute.
+      required: true
+      schema:
+        type: string
+    suggest:
+      name: suggest
+      in: query
+      description: The current input for the attribute.
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

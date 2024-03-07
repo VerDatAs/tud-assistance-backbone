@@ -1,0 +1,132 @@
+#  Assistance Backbone for the assistance system developed as part of the VerDatAs project
+#  Copyright (C) 2022-2024 TU Dresden (Robert Schmidt, Sebastian Kucharski)
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+en:
+  assistance:
+    debug:
+      description: Initiate a sample assistance for debugging for each xAPI statement.
+    ask_for_exchange_willingness:
+      description: Ask the user if they would like to be a future learning partner.
+      operation:
+        message_question_for_exchange_willingness: "Are you available as a future learning partner for enquiring users? Note: You will automatically be marked as a potential learning partner if you submit a co-operation request yourself."
+        option_no: No
+        option_yes: Yes
+        system_message_confirmation_considered_in_future: Thank you, you will be available as a learning partner for enquiring users in the future.
+        system_message_confirmation_not_considered_in_future: Thank you, you will not be available as a learning partner for enquiring users in the future.
+        system_message_no_option_selected: You have not selected an option.
+    entry_test_feedback:
+      description: Determine the result of an entry test and deliver corresponding feedback.
+      operation:
+        message_user_is_expert: Great score! You can call yourself an expert in the field. You can browse freely through the course and complete the learning tasks in the individual chapters to test your knowledge.
+        message_user_is_no_expert: You are not yet an expert in the field. It is recommend that you work through the learning topics with the learning tasks one after the other.
+    final_test_feedback:
+      description: Determine the result of a final test and deliver corresponding feedback.
+      operation:
+        message_not_enough_tasks_solved_part1: First solve the learning tasks in the individual chapters before moving on to the final tasks.
+        system_message_not_enough_tasks_solved_part2: The knowledge structure in the course gives you an overview of which tasks you have already answered and which you have not.
+    final_test_result_feedback:
+      description: Determine the result of a final test and provides feedback.
+      operation:
+        message_completed_not_successfully: Unfortunately, you have not yet been able to answer all the questions. You should read the individual chapters again.
+        message_completed_successfully: Great! You have answered over 90% of the questions correctly and thus successfully completed the learning module.
+    greeting:
+      description: Greet the user.
+      operation:
+        greeting: Hello my name is Veri! I'm here to give you useful tips and feedback. Please note that direct chatting is not available. You can close me at any time, but I'll let you know when I have new information for you. Why don't you give it a try now?
+        toolcheck_screencast_hint: If you need help understanding how it works, you can watch the linked video demonstration.
+        welcome_back: Welcome back!
+    knowledge_structure_hint:
+      description: Introduce the knowledge structure and its capabilities to users.
+      operation:
+        message_introduction_knowledge_graph: For better orientation, you can use the overview of learning topics in the course. If you have edited content, this will be visible here. Start with the first learning module.
+        message_introduction_progress_indication: Here in the overview of learning topics you can see what you have already worked on and which topics are still open.
+        message_ask_for_jumping_to_last_state: Would you like to continue where you last left off? Then click on the following link.
+    learning_diary_hint:
+      description: Introduce the learning diary and its capabilities to users.
+      operation:
+        message_usage_hint_first_learning_diary: You have decided in favour of the learning diary. It helps you to formulate goals for the course and focus on your most important topics.
+        message_usage_hint_last_learning_diary: At this point, the learning diary can help you to summarise the most important content from the course and consider what you would like to work on further.
+        message_usage_second_hint_first_learning_diary: Take a moment to write down your goals in the learning diary.
+        message_usage_second_hint_last_learning_diary: Fill in the learning diary to reflect on your learning process.
+    offer_assistance_options:
+      description: Provide the user with different assistance options from which a choice can be made.
+      operation:
+        message_different_peer_selected: A different learning partner was selected for the collaboration.
+        message_no_peer_available: Unfortunately there is no learning partner available at the moment.
+        message_offer_assistance_options: How would you like to organise your feedback process?
+        message_offer_option_traditional_feedback: I would like the system to provide automatic feedback.
+        message_offer_option_peer_exchange: I would like to have a collaboration with another learner.
+        message_peer_would_like_to_connect: A learning partner would like to discuss a task with you that you have already completed. Would you agree to this?
+        message_searching_for_peer: A learning partner will be requested for you. This process can take up to 2 minutes.
+        message_task_completed_not_successfully: Take another look at the corresponding content page before you solve the learning task again.
+        message_task_completed_successfully: Very good, you have answered the learning tasks correctly. You can now continue with the next chapter.
+        option_accepted: Accept
+        option_declined: Decline
+        system_message_no_feedback_option_selected: You have not selected a feedback option.
+    peer_collaboration:
+      description: Support two users during a collaboration process.
+      operation:
+        evaluation_link: "https://sample.com"
+        message_hint_collaboration_1: Discuss in the chat what a combination of your two answers might look like. How can both perspectives work together and achieve an optimum solution?
+        message_hint_collaboration_2: Take note of points that do not overlap, perhaps even contradict each other, and consider together whether and how you can take them into account for an optimal solution.
+        message_hint_collaboration_3: Discuss which metrics you used to make the decision.
+        message_hint_collaboration_4: If you have already finished, please discuss which energy-saving measures are most suitable.
+        message_peer_found: "A learning partner has been found."
+        message_task_description_part1: "The task is as follows: A sustainably orientated, fast-growing startup is developing an app and would like to use the services of a cloud provider to process and store user data. To enable the user to use the app seamlessly between multiple devices, the user data (approx. 35 GB in total) is to be stored on the server. Most of the calculations are performed by the app locally on the user's device."
+        message_task_description_part2: In the following, you and a learning partner will select an efficient provider in terms of sustainability and costs and justify your decision. Please follow my instructions.
+        message_task_description_collaborative_work_part1: Now that you have completed your part of the task, the last step is to find a common result for the task. I will support you in this again.
+        message_task_description_peer_introduction: I will ask you a few questions below. You can follow the answers from you and your learning partner here in the chat.
+        message_task_peer_introduction: "Briefly introduce yourself to each other: Name, field of study and specialisation, special interests."
+        message_task_description_individual_solution_development: Please read the learning material of the group assigned to you and use the template in the notes as a guide to work out a partial solution, which will then serve as the basis for an exchange with your learning partner. After the time has elapsed, your learning partner's result will also be made available to you.
+        message_task_description_read_peer_solution: Please read your learning partner's answers to gain an insight into their solution. When you have finished, click on continue. When your learning partner has finished reading, I will ask you the next question.
+        message_task_description_solution_proposal: Now enter your result in the notes, taking into account the joint exchange.
+        message_task_prior_knowledge_rating: "Please rate your knowledge in the following areas:\n1. Green cloud computing\n2. Measures to improve sustainability\n3. Sustainability metrics"
+        message_thank_you: Thank you for your participation!
+        message_evaluation_link: Please complete the evaluation, which you can access via the following link.
+        message_waiting_for_peer_to_provide_solution: You have submitted your solution. Wait for your learning partner to continue.
+        message_waiting_for_peer_to_read_solution: Wait until your learning partner has read your solution.
+        solution_template: "Scenario requirements:\n*\n*\n*\n*\n\nRanking of cloud providers:\n*\n*\n*\n\n\nChoosing the most suitable provider:\n*\n*\n*\n\n\nJustification of the selection:\n*\n*\n*\n"
+        system_message_prior_knowledge_rating_template: "Please rate yourself using the dimensions 'high | medium | low'."
+        system_message_information_about_group_assignment: You are assigned to group {group}.
+        system_message_information_time_for_collaboration_and_exchange: You will have 20 minutes to complete the exercise during which you can exchange ideas with your learning partner.
+        system_message_information_time_for_introduction_questions: You have 1.5 minutes to answer each question.
+        system_message_information_time_for_individual_solution_development_and_exchange_and_solution_provision_part1: Use the notes to enter your solution. You have a total of 20 minutes to do this and can hand in your solution after 5 minutes at the earliest. It is not possible to exchange information with your learning partner while you are working.
+        system_message_information_time_for_individual_solution_development_and_exchange_and_solution_provision_part2: "Note: The chatbot can be closed to make reading the material easier. The table of contents can be used to navigate within the material (use the Tools button)."
+        system_message_information_time_for_individual_solution_proposal_and_exchange_and_solution_provision: You have 10 minutes. It is no longer possible to exchange ideas with your learning partner. Use the notes to enter your solution.
+        system_message_information_time_for_read_peer_solution: You have 5 minutes, but you can also continue after 2 minutes if your learning partner is ready.
+        system_message_information_time_left_for_collaboration: You have 5 minutes left for editing.
+        system_message_information_time_left_for_solution_proposal: You have 2 minutes left for editing.
+        system_message_information_time_left_for_individual_solution_development: You have 2 minutes left for editing.
+        system_message_scenario_aborted: The assistance process was cancelled due to the lack of response from your learning partner.
+        system_message_searching_for_peer: A learning partner will be selected for you, with whom you can work on the task together.
+      phase:
+        title_collaboration: Collaborative phase
+        title_individual_solution_development: Customised production of the partial solution
+        title_introduction: Introduction of learning partners
+        title_review_solution_peer: Reading the learning partner's partial solution
+        title_solution_proposal: Entering the solution
+        title_task_description: Presentation of the joint learning task
+    peer_exchange:
+      description: Allow two users to share knowledge and experience on a learning task.
+      operation:
+        message_exchange_hint: Explain your thoughts on solving the task to your learning partner.
+        system_message_connected_with_peer: You have been connected with a learning partner. You can now chat with each other.
+        system_message_exchange_finished: The connection to your learning partner has been disconnected.
+    tool_check_hint:
+      description: Give the user a hint on how to switch to the perspective of the teacher (tool check).
+      operation:
+        message_hint_for_perspective_change: If you would now like to view the course from a teacher's perspective, please click on the link below.
+        message_go_back_hint: If you want to return to the learning material, click on the following link.
+        message_usage_hint: Nice to have you here! Suppose you are an instructor and are interested in which course materials are viewed most frequently. You can find this information in the "Documents and course elements" display, for example. Why don't you try to find out which interactive learning tasks have been viewed the most?

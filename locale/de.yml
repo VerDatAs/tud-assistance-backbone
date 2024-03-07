@@ -1,0 +1,132 @@
+#  Assistance Backbone for the assistance system developed as part of the VerDatAs project
+#  Copyright (C) 2022-2024 TU Dresden (Robert Schmidt, Sebastian Kucharski)
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+de:
+  assistance:
+    debug:
+      description: Schickt für jedes xAPI Statement eine Beispielnachricht an den Benutzer zur Fehlersuche.
+    ask_for_exchange_willingness:
+      description: Fragt den Benutzer, ob er zukünftig als Lernpartner zur Verfügung steht.
+      operation:
+        message_question_for_exchange_willingness: "Stehen Sie zukünftig als Lernpartner für anfragende Nutzer zur Verfügung? Hinweis: Sie werden automatisch als potenzieller Lernpartner markiert, wenn Sie selbst eine Kooperationsanfrage stellen."
+        option_no: Nein
+        option_yes: Ja
+        system_message_confirmation_considered_in_future: Vielen Dank, Sie stehen zukünftig als Lernpartner für anfragende Nutzer zur Verfügung.
+        system_message_confirmation_not_considered_in_future: Vielen Dank, Sie stehen zukünftig nicht als Lernpartner für anfragende Nutzer zur Verfügung.
+        system_message_no_option_selected: Sie haben keine Option ausgewählt.
+    entry_test_feedback:
+      description: Ermittelt das Ergebnis eines Eingangstests und gibt ein entsprechendes Feedback.
+      operation:
+        message_user_is_expert: Großartige Punktzahl! Sie können sich Experte auf dem Gebiet nennen. Sie können sich frei im Kurs umschauen und zur Prüfung Ihres Wissens die Lernaufgaben in den einzelnen Kapiteln bearbeiten.
+        message_user_is_no_expert: Sie sind noch kein Experte auf dem Gebiet. Ich empfehle Ihnen, die Lernthemen mit den Lernaufgaben nacheinander abzuarbeiten.
+    final_test_feedback:
+      description: Prüft den Fortschritt des Nutzers und gibt einen Hinweis, wenn dieser den Abschlusstests noch nicht durchführen sollte.
+      operation:
+        message_not_enough_tasks_solved_part1: Lösen Sie zunächst die Lernaufgaben der einzelnen Kapitel, bevor Sie sich den Abschlussaufgaben zuwenden.
+        system_message_not_enough_tasks_solved_part2: Über die Wissensstruktur im Kurs erhalten Sie einen Überblick darüber, welche Aufgaben Sie bereits beantwortet haben und welche nicht.
+    final_test_result_feedback:
+      description: Ermittelt das Ergebnis eines Abschlusstests und gibt ein entsprechendes Feedback.
+      operation:
+        message_completed_not_successfully: Leider konntest du noch nicht alle Fragen beantworten. Du solltest noch einmal in den einzelnen Kapiteln nachlesen.
+        message_completed_successfully: Super! Du hast über 90% der Fragen richtig beantwortet und das Lernmodul damit erfolgreich abgeschlossen.
+    greeting:
+      description: Begrüßt den Nutzer.
+      operation:
+        greeting: Hallo mein Name ist Veri! Ich bin hier, um Ihnen nützliche Tipps und Feedback zu geben. Bitte beachten Sie, dass direktes Chatten nicht verfügbar ist. Sie können mich jederzeit schließen, aber ich informiere Sie, wenn ich neue Informationen für Sie habe. Warum versuchen Sie es nicht gleich einmal?
+        toolcheck_screencast_hint: Sollten Sie Hilfe beim Verständnis der Funktionsweise benötigen, können Sie sich die verlinkte Videodemonstration ansehen.
+        welcome_back: Willkommen zurück!
+    knowledge_structure_hint:
+      description: Führt den Benutzer in die Wissensstruktur und ihre Möglichkeiten ein.
+      operation:
+        message_introduction_knowledge_graph: Für eine bessere Orientierung können Sie die Übersicht der Lernthemen im Kurs verwenden. Wenn Sie Inhalte bearbeitet haben, wird das hier sichtbar. Starten Sie zunächst mit dem ersten Lernmodul.
+        message_introduction_progress_indication: Hier in der Übersicht der Lernthemen können Sie sehen, was Sie schon bearbeitet haben und welche Themen noch offen sind.
+        message_ask_for_jumping_to_last_state: Wollen Sie dort weitermachen, wo Sie zuletzt aufgehört haben? Dann klicken Sie auf den folgenden Link.
+    learning_diary_hint:
+      description: Stellt den Nutzern das Lerntagebuch und seine Möglichkeiten vor.
+      operation:
+        message_usage_hint_first_learning_diary: Sie haben sich für das Lerntagebuch entschieden. Es hilft Ihnen, Ziele für den Kurs zu formulieren und sich auf Ihre wichtigsten Themen zu fokussieren.
+        message_usage_hint_last_learning_diary: An dieser Stelle kann Ihnen das Lerntagebuch helfen, die wichtigsten Inhalte aus dem Kurs zusammenzufassen und zu überlegen, woran Sie noch weiterarbeiten möchten.
+        message_usage_second_hint_first_learning_diary: Nehmen Sie sich einen Moment Zeit, um Ihre Ziele in das Lerntagebuch einzutragen.
+        message_usage_second_hint_last_learning_diary: Füllen Sie das Lerntagebuch aus um Ihren Lernprozess zu reflektieren.
+    offer_assistance_options:
+      description: Bietet dem Nutzer verschiedene Assistenzangebote an, aus denen ausgewählt werden kann.
+      operation:
+        message_different_peer_selected: Es wurde ein anderer Lernpartner für den Austausch ausgewählt.
+        message_no_peer_available: Leider ist momentan kein Lernpartner verfügbar.
+        message_offer_assistance_options: Wie möchten Sie Ihren Feedbackprozess gestalten?
+        message_offer_option_traditional_feedback: Ich wünsche mir, dass das System automatisch Rückmeldungen gibt.
+        message_offer_option_peer_exchange: Ich wünsche mir einen Austausch mit einer/einem anderen Lernenden.
+        message_peer_would_like_to_connect: Ein Lernpartner würde sich gerne mit Ihnen zu einer Aufgabe austauschen, die Sie bereits bearbeitet haben. Wollen Sie dem zustimmen?
+        message_searching_for_peer: Es wird ein Lernpartner für Sie angefragt. Dieser Prozess kann bis zu 2 Minuten dauern.
+        message_task_completed_not_successfully: Schauen Sie sich noch einmal die zugehörige Inhaltsseite an, bevor Sie die Lernaufgabe erneut lösen.
+        message_task_completed_successfully: Sehr gut, Sie haben die Lernaufgaben korrekt beantwortet. Sie können nun mit dem nächsten Kapitel fortfahren.
+        option_accepted: Akzeptieren
+        option_declined: Ablehnen
+        system_message_no_feedback_option_selected: Sie haben keine Feedbackoption ausgewählt.
+    peer_collaboration:
+      description: Unterstützt zwei Benutzer während eines Kooperationsprozesses entsprechend eine psychologischen Skripts zur Peer Kollaboration.
+      operation:
+        evaluation_link: "https://sample.com"
+        message_hint_collaboration_1: Treten Sie darüber im Chat in den Austausch, wie eine Kombination aus ihren beiden Antworten aussehen kann. Wie können beide Perspektiven zusammenwirken und ein Optimum in der Lösung erreicht werden?
+        message_hint_collaboration_2: Beachten Sie Punkte, die sich nicht überschneiden, vielleicht sogar widersprechen, und überlegen Sie gemeinsam, ob und wie Sie diese für eine optimale Lösung berücksichtigen können.
+        message_hint_collaboration_3: Diskutieren Sie, auf Basis welcher Metriken Sie die Entscheidung getroffen haben.
+        message_hint_collaboration_4: Wenn Sie bereits fertig sind, diskutieren Sie bitte, welche Maßnahmen zur Energieeinsparung am besten geeignet sind.
+        message_peer_found: "Es wurde ein Lernpartner gefunden."
+        message_task_description_part1: "Die Aufgabenstellung lautet wie folgt: Ein nachhaltig orientiertes, schnell wachsendes Startup entwickelt eine App und möchte zur Verarbeitung und Speicherung von Nutzerdaten die Dienste eines Cloud Anbieters nutzen. Damit der Nutzer die App zwischen mehreren Geräten nahtlos nutzen kann, sollen die Nutzerdaten (gesamt ca. 35GB) auf dem Server gespeichert werden. Die meisten Berechnungen werden von der App lokal auf dem Gerät des Nutzers ausgeführt."
+        message_task_description_part2: Im Folgenden wählen Sie gemeinsam mit einem Lernpartner einen unter Nachhaltigkeits- und Kostengesichts-Punkten effizienten Anbieter aus und begründen Ihre Entscheidung. Folgen Sie dazu bitte meinen Anweisungen.
+        message_task_description_collaborative_work_part1: Nachdem Sie nun Ihren Teil der Aufgabe bearbeitet haben, sollen Sie im letzten Schritt ein gemeinsames Ergebnis für die Aufgabe finden. Dabei werde ich Sie wieder unterstützen.
+        message_task_description_peer_introduction: Ich werde Ihnen im Folgenden einige Fragen stellen. Die Antworten von Ihnen und Ihrem Lernpartner können Sie hier im Chat verfolgen.
+        message_task_peer_introduction: "Stellen Sie sich kurz gegenseitig vor: Name, Studienrichtung und Vertiefung, besondere Interessen."
+        message_task_description_individual_solution_development: Bitte lesen Sie das Lernmaterial der Ihnen zugeteilten Gruppe und orientieren Sie sich an der Vorlage in den Notizen, um eine Teillösung zu erarbeiten, die Ihnen im nächsten Schritt als Grundlage für den Austausch mit Ihrem Lernpartner dient. Nach Ablauf der Zeit wird Ihnen das Ergebnis Ihres Lernpartners ebenfalls zur Verfügung gestellt.
+        message_task_description_read_peer_solution: Bitte lesen Sie die Antworten Ihres Lernpartners, um einen Einblick in seine Aufgabenlösung zu bekommen. Wenn Sie fertig sind, klicken Sie auf weiter. Wenn auch Ihr Lernpartner fertig ist mit Lesen, werde ich Ihnen die nächste Frage stellen.
+        message_task_description_solution_proposal: Tragen Sie nun Ihr Ergebnis unter Berücksichtigung des gemeinsamen Austauschs in die Notizen ein.
+        message_task_prior_knowledge_rating: "Bitte schätzen Sie Ihr Wissen in den folgenden Gebieten ein:\n1. Green Cloud Computing\n2. Maßnahmen zur Verbesserung der Nachhaltigkeit\n3. Nachhaltigkeits-Metriken"
+        message_thank_you: Vielen Dank für Ihre Teilnahme!
+        message_evaluation_link: Bitte füllen Sie noch die Evaluation aus, die Sie über den folgenden Link erreichen können.
+        message_waiting_for_peer_to_provide_solution: Sie haben Ihre Lösung abgegeben. Zum Fortfahren wird auf Ihren Lernpartner gewartet.
+        message_waiting_for_peer_to_read_solution: Es wird gewartet bis Ihr Lernpartner Ihre Lösung gelesen hat.
+        solution_template: "Anforderungen des Szenarios:\n*\n*\n*\n\nRanking der Cloud-Provider:\n*\n*\n*\n\nAuswahl des am besten geeigneten Providers:\n*\n*\n*\n\nBegründung der Auswahl:\n*\n*\n*\n"
+        system_message_prior_knowledge_rating_template: "Bitte schätzen Sie sich mit den Dimensionen 'viel | mittel | gering' selbst ein."
+        system_message_information_about_group_assignment: Sie sind Gruppe {group} zugewiesen.
+        system_message_information_time_for_collaboration_and_exchange: Sie haben für die Bearbeitung 20 Minuten Zeit in der Sie sich mit Ihrem Lernpartner austauschen können.
+        system_message_information_time_for_introduction_questions: Für die Beantwortung der Fragen haben Sie jeweils 1,5 Minuten Zeit.
+        system_message_information_time_for_individual_solution_development_and_exchange_and_solution_provision_part1: Nutzen Sie die Notizen zur Eintragung Ihrer Lösung. Sie haben hierfür insgesamt 20 Minuten Zeit und können Ihre Lösung frühestens nach 5 Minuten abgeben. Während der Bearbeitung ist kein Austausch mit Ihrem Lernpartner möglich.
+        system_message_information_time_for_individual_solution_development_and_exchange_and_solution_provision_part2: "Hinweis: Der Chatbot kann zum einfacheren Lesen des Materials geschlossen werden. Zur Navigation innerhalb des Materials kann das Inhaltsverzeichnis genutzt werden (Tools-Button benutzen)."
+        system_message_information_time_for_individual_solution_proposal_and_exchange_and_solution_provision: Sie haben 10 Minuten Zeit. Es ist nun kein Austausch mit Ihrem Lernpartner mehr möglich. Nutzen Sie die Notizen zur Eintragung Ihrer Lösung.
+        system_message_information_time_for_read_peer_solution: Sie haben 5 Minuten Zeit, können aber auch nach 2 Minuten fortfahren, wenn Ihr Lernpartner bereit ist.
+        system_message_information_time_left_for_collaboration: Sie haben noch 5 Minuten Zeit für die Bearbeitung.
+        system_message_information_time_left_for_solution_proposal: Sie haben noch 2 Minuten Zeit für die Bearbeitung.
+        system_message_information_time_left_for_individual_solution_development: Sie haben noch 2 Minuten Zeit für die Bearbeitung.
+        system_message_scenario_aborted: Aufgrund der fehlenden Reaktion Ihres Lernpartners wurde der Assistenzprozess abgebrochen.
+        system_message_searching_for_peer: Für Sie wird ein Lernpartner ausgewählt, mit dem Sie die Aufgabe gemeinsam bearbeiten können.
+      phase:
+        title_collaboration: Kollaborative Phase
+        title_individual_solution_development: Individuelle Anfertigung der Teillösung
+        title_introduction: Vorstellung Lernpartner
+        title_review_solution_peer: Lesen der Teillösung des Lernpartners
+        title_solution_proposal: Eintragung der Lösung
+        title_task_description: Vorstellung der gemeinsamen Lernaufgabe
+    peer_exchange:
+      description: Ermöglicht es zwei Benutzern sich zu einer Lernaufgabe auszutauschen.
+      operation:
+        message_exchange_hint: Erläutern Sie Ihre Überlegungen zur Aufgabenlösung Ihrem Lernpartner.
+        system_message_connected_with_peer: Sie wurden mit einem Lernpartner verbunden. Sie können sich nun über den Chat miteinander austauschen.
+        system_message_exchange_finished: Die Verbindung zu Ihrem Lernpartner wurde getrennt.
+    tool_check_hint:
+      description: Gibt dem Nutzer einen Hinweis wie er in die Perspektive eines Lehrenden wechseln kann (Tool Check).
+      operation:
+        message_hint_for_perspective_change: Wenn Sie nun das Kursgeschehen aus der Perspektive einer Lehrperson betrachten möchten, klicken Sie bitte auf den untenstehenden Link.
+        message_go_back_hint: Wenn Sie zum Lernmaterial zurückkehren wollen, klicken Sie auf den folgenden Link.
+        message_usage_hint: Schön, dass Sie hier sind! Angenommen, Sie sind ein:e Ausbilder:in und interessieren sich dafür, welche Kursmaterialien besonders häufig angesehen werden. Sie können diese Informationen beispielsweise in der Anzeige „Dokumente und Kursbausteine“ finden. Versuchen Sie doch einmal herauszufinden, welche interaktiven Lernaufgaben am häufigsten angeschaut wurden.
